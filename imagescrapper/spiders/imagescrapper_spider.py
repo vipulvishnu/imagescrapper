@@ -22,7 +22,6 @@ class ImagescrapperSpider(scrapy.Spider):
         for url in next_urls:
           if domain in url:
             urls.append(url)
-        # print 'dddddddddddddd\n\n\n\n\n\n', urls
         # filename = response.url.split("/")[-2] + '.html'
         # with open(filename, 'wb') as f:
         #     f.write(response.body)
