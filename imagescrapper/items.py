@@ -9,6 +9,7 @@ import scrapy
 
 
 class ImagescrapperItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    # define the fields
+    image_url = scrapy.Field()
+    alt_text = scrapy.Field()
+
