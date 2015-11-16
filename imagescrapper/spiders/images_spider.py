@@ -70,6 +70,8 @@ class BaseSpider(scrapy.Spider):
             next_urls = doc.xpath('.//a/@href')
             for url in next_urls:
                 url = self._make_up_url(url)
+                if not url:
+                    continue
                 next_url = self._apply_schema_to_url(url)
                 yield Request(url=next_url)
 
@@ -78,6 +80,7 @@ class BaseSpider(scrapy.Spider):
         if (not(url_object.scheme) or not(url_object.netloc)) and url_object.path:
             if re.search('(/.+?/)', url_object.path):
                 return self.domain+url_object.path
+        return url
 
     def _apply_schema_to_url(self, url):
         """
@@ -100,12 +103,15 @@ class BaseSpider(scrapy.Spider):
         """
         image_urls = doc.xpath('.//img/@src') + doc.xpath('.//img/@data-src')
         for image_url in image_urls:
-
+            current_url_index = image_urls.index(image_url)
             if self.image_url_validation(image_url):
-                image_urls[image_urls.index(image_url)] = self._apply_schema_to_url(image_url)
+                parsed_uri = urlparse(image_url)
+                if not parsed_uri.netloc:
+                    image_url = '{domain}{uri.path}'.format(domain=self.domain, uri=parsed_uri)
+                image_urls[current_url_index] = self._apply_schema_to_url(image_url)
             else:
                 # Remove the invalid urls form the
-                image_urls.pop(image_urls.index(image_url))
+                image_urls.pop(current_url_index)
 
         return image_urls
 
