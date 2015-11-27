@@ -16,4 +16,3 @@ Scrapping is the process of extracting information from web pages. If you need t
 4. Inherit BaseSpider into your spider
 
 5. Give the name and start_urls from which you want to access the images
-
